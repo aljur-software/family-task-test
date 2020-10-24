@@ -2,6 +2,7 @@
 using Core.Abstractions.Repositories;
 using Core.Abstractions.Services;
 using Domain.Commands;
+using ddm = Domain.DataModels;
 using Domain.Queries;
 using Domain.ViewModel;
 using System;
@@ -25,7 +26,7 @@ namespace Services
 
         public async Task<CreateTaskCommandResult> CreateTaskCommandHandler(CreateTaskCommand command)
         {
-            var task = _mapper.Map<Domain.DataModels.Task>(command);
+            var task = _mapper.Map<ddm.Task>(command);
             var persistedMember = await _taskRepository.CreateRecordAsync(task);
 
             var vm = _mapper.Map<TaskVm>(persistedMember);
@@ -36,19 +37,55 @@ namespace Services
             };
         }
 
-        public Task<AssignTaskCommandResult> AssignTaskCommandHandler(AssignTaskCommand command)
+        public async Task<AssignTaskCommandResult> AssignTaskCommandHandler(AssignTaskCommand command)
         {
-            throw new NotImplementedException();
+            var isSucceed = true;
+            var task = await _taskRepository.ByIdAsync(command.Id);
+
+            _mapper.Map<AssignTaskCommand, ddm.Task>(command, task);
+
+            var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task); //create assing method? 
+
+            if (affectedRecordsCount < 1)
+                isSucceed = false;
+
+            return new AssignTaskCommandResult()
+            {
+                Succeed = isSucceed
+            };
         }
 
-        public Task<CompleteTaskCommandResult> CompleteTaskCommandHandler(CompleteTaskCommand command)
+        public async Task<CompleteTaskCommandResult> CompleteTaskCommandHandler(CompleteTaskCommand command)
         {
-            throw new NotImplementedException();
+            var isSucceed = true;
+            var task = await _taskRepository.ByIdAsync(command.Id);
+
+            _mapper.Map<CompleteTaskCommand, ddm.Task>(command, task);
+
+            var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task); //create complete method? 
+
+            if (affectedRecordsCount < 1)
+                isSucceed = false;
+
+            return new CompleteTaskCommandResult()
+            {
+                Succeed = isSucceed
+            };
         }
 
-        public Task<GetAllTasksQueryResult> GetAllTasksQueryHandler()
+        public async Task<GetAllTasksQueryResult> GetAllTasksQueryHandler()
         {
-            throw new NotImplementedException();
+            IEnumerable<TaskVm> vm = new List<TaskVm>();
+
+            var tasks = await _taskRepository.Reset().ToListAsync();
+
+            if (tasks != null && tasks.Any())
+                vm = _mapper.Map<IEnumerable<TaskVm>>(tasks);
+
+            return new GetAllTasksQueryResult()
+            {
+                Payload = vm
+            };
         }
     }
 }
