@@ -54,7 +54,7 @@
     }
 
 
-    
+
 
     private void OnAddItem()
     {
@@ -68,10 +68,6 @@
 
         newTask = string.Empty;
 
-        if (memberService.SelectedMember != null)
-        {
-            task.Member = memberService.SelectedMember;
-        }
         taskDataService.CreateTask(task);
         StateHasChanged();
     }

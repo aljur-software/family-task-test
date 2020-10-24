@@ -27,9 +27,9 @@ namespace Services
         public async Task<CreateTaskCommandResult> CreateTaskCommandHandler(CreateTaskCommand command)
         {
             var task = _mapper.Map<ddm.Task>(command);
-            var persistedMember = await _taskRepository.CreateRecordAsync(task);
+            var persistedTask = await _taskRepository.CreateRecordAsync(task);
 
-            var vm = _mapper.Map<TaskVm>(persistedMember);
+            var vm = _mapper.Map<TaskVm>(persistedTask);
 
             return new CreateTaskCommandResult()
             {
@@ -77,7 +77,7 @@ namespace Services
         {
             IEnumerable<TaskVm> vm = new List<TaskVm>();
 
-            var tasks = await _taskRepository.Reset().ToListAsync();
+            var tasks = await _taskRepository.Reset().GetAllTasksWithMemberAsync();
 
             if (tasks != null && tasks.Any())
                 vm = _mapper.Map<IEnumerable<TaskVm>>(tasks);

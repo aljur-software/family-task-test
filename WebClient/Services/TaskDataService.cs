@@ -20,6 +20,7 @@ namespace WebClient.Services
         {
             httpClient = clientFactory.CreateClient("FamilyTaskAPI");
             Tasks = new List<TaskVm>();
+            LoadTasks();
         }
 
         public IEnumerable<TaskVm> Tasks { get; private set; }
@@ -44,6 +45,17 @@ namespace WebClient.Services
         {
             return await httpClient.GetJsonAsync<GetAllTasksQueryResult>("tasks");
         }
+        private async void LoadTasks()
+        {
+            var updatedList = (await GetAllTasks()).Payload;
+            if (updatedList != null)
+            {
+                Tasks = updatedList;
+                TasksUpdated?.Invoke(this, null);
+                return;
+            }
+            CreateTaskFailed?.Invoke(this, "The creation was successful, but we can no longer get an updated list of tasks from the server.");
+        }
 
         public async Task CreateTask(TaskVm model)
         {
@@ -51,14 +63,12 @@ namespace WebClient.Services
             if (result != null)
             {
                 var updatedList = (await GetAllTasks()).Payload;
-
                 if (updatedList != null)
                 {
                     Tasks = updatedList;
                     TasksUpdated?.Invoke(this, null);
                     return;
                 }
-                CreateTaskFailed?.Invoke(this, "The creation was successful, but we can no longer get an updated list of members from the server.");
             }
 
             CreateTaskFailed?.Invoke(this, "Unable to create record.");

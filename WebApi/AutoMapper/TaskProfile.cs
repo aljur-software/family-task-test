@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using Domain.Commands;
+using Domain.DataModels;
 using Domain.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace WebApi.AutoMapper
 {
@@ -15,7 +13,10 @@ namespace WebApi.AutoMapper
             CreateMap<CreateTaskCommand, Task>();
             CreateMap<CompleteTaskCommand, Task>();
             CreateMap<AssignTaskCommand, Task>();
-            CreateMap<Task, TaskVm>();
+            CreateMap<Task, TaskVm>().ForMember(
+                dest => dest.Member,
+                opt => opt.MapFrom(src => src.AssignedMember)
+            );
         }
     }
 }
