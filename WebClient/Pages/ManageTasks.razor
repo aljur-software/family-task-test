@@ -58,20 +58,22 @@
 
     private void OnAddItem()
     {
-        var task = new TaskModel()
+        var task = new TaskVm()
         {
             Id = Guid.NewGuid(),
-            IsDone = false,
-            Text = newTask
+            IsComplete = false,
+            Subject = newTask,
+            Member = memberService.SelectedMember,
+            AssignedMemberId = memberService.SelectedMember.Id
         };
 
         newTask = string.Empty;
 
         if (memberService.SelectedMember != null)
         {
-            task.Member = memberService.SelectedMember.Id;
+            task.Member = memberService.SelectedMember;
         }
-        taskDataService.AddTask(task);
+        taskDataService.CreateTask(task);
         StateHasChanged();
     }
 
