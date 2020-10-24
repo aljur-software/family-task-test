@@ -63,8 +63,7 @@
             Id = Guid.NewGuid(),
             IsComplete = false,
             Subject = newTask,
-            Member = memberService.SelectedMember,
-            AssignedMemberId = memberService.SelectedMember.Id
+            Member = memberService.SelectedMember
         };
 
         newTask = string.Empty;

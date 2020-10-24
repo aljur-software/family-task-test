@@ -54,7 +54,7 @@ namespace Core.Extensions.ModelConversion
             var command = new CreateTaskCommand()
             {
                 Subject = model.Subject,
-                AssignedMemberId = model.AssignedMemberId
+                AssignedMemberId = model.Member.Id
             };
             return command;
         }

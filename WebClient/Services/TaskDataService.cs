@@ -1,4 +1,5 @@
-﻿using Domain.Commands;
+﻿using Core.Extensions.ModelConversion;
+using Domain.Commands;
 using Domain.Queries;
 using Domain.ViewModel;
 using Microsoft.AspNetCore.Components;
@@ -8,7 +9,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using WebClient.Abstractions;
-using WebClient.Shared.Models;
 
 namespace WebClient.Services
 {
