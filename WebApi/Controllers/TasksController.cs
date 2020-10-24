@@ -22,6 +22,19 @@ namespace WebApi.Controllers
             _taskService = taskService;
         }
 
+        [HttpPost]
+        [ProducesResponseType(typeof(CreateTaskCommandResult), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Create(CreateTaskCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _taskService.CreateTaskCommandHandler(command);
+
+            return Created($"/api/tasks/{result.Payload.Id}", result);
+        }
 
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(AssignTaskCommandResult), StatusCodes.Status200OK)]
