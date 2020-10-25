@@ -3,7 +3,6 @@
 @using Domain.ViewModel
 @using WebClient.Abstractions
 @using WebClient.Components
-@using WebClient.Shared.Models
 @using WebClient.Shared.Components
 @inject IMemberDataService memberService;
 @inject ITaskDataService taskDataService;
@@ -65,7 +64,6 @@
         {
             IsComplete = false,
             Subject = newTask,
-            AssignedMemberId = memberService.SelectedMember != null ? memberService.SelectedMember.Id : new Nullable<Guid>(),
             Member = memberService.SelectedMember
         };
 

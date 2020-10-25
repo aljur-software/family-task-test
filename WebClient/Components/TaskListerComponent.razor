@@ -102,7 +102,7 @@
             return;
         };
 
-        tasks = taskService.Tasks.Where(t => t.AssignedMemberId == selectedMember.Id).ToList();
+        tasks = taskService.Tasks.Where(t => t.Member != null && t.Member.Id == selectedMember.Id).ToList();
         StateHasChanged();
     }
 

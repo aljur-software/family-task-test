@@ -36,19 +36,17 @@ namespace Services
 
         public async Task<AssignTaskCommandResult> AssignTaskCommandHandler(AssignTaskCommand command)
         {
-            var isSucceed = true;
             var task = await _taskRepository.ByIdAsync(command.Id);
 
             _mapper.Map<AssignTaskCommand, Domain.DataModels.Task>(command, task);
 
             var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task); 
 
-            if (affectedRecordsCount < 1)
-                isSucceed = false;
+            var succeed = affectedRecordsCount == 1;
 
             return new AssignTaskCommandResult()
             {
-                Succeed = isSucceed
+                Succeed = succeed
             };
         }
 
