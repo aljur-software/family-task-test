@@ -53,6 +53,10 @@ namespace WebClient.Services
         {
             return await httpClient.PutJsonAsync<CompleteTaskCommandResult>("tasks/complete", command);
         }
+        private async Task<AssignTaskCommandResult> Assign(AssignTaskCommand command)
+        {
+            return await httpClient.PutJsonAsync<AssignTaskCommandResult>("tasks/assign", command);
+        }
         private async Task<GetAllTasksQueryResult> GetAllTasks()
         {
             return await httpClient.GetJsonAsync<GetAllTasksQueryResult>("tasks");
@@ -77,6 +81,15 @@ namespace WebClient.Services
 
             CreateTaskFailed?.Invoke(this, "Unable to create record.");
         }
+        public async Task AssignTask(TaskVm model)
+        {
+            var result = await Assign(model.ToAssignTaskCommand());
+            if (result != null)
+                LoadTasks();
+
+            CreateTaskFailed?.Invoke(this, "Unable to update record.");
+        }
+
 
         public async Task ToggleTask(TaskVm model)
         {

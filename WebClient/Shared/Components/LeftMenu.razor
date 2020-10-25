@@ -199,8 +199,11 @@
         await JSRuntime.InvokeVoidAsync("RefreshMenuItemsDragStatus", null);
 
         var task = taskService.DragedTask;
+        if (task.Member == null)
+            task.Member = new Domain.ViewModel.MemberVm();
+        task.Member.Id = memberId;
 
-        // ToDo: TaskService.AssignTask(taskId, memberId);
+        await taskService.AssignTask(task);
 
     }
 

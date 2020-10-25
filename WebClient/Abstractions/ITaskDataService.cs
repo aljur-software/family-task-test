@@ -25,6 +25,8 @@ namespace WebClient.Abstractions
         event EventHandler<string> CompleteTaskFailed;
 
         Task CreateTask(TaskVm model);
+        Task AssignTask(TaskVm model);
+
         void SelectTask(Guid id);
         void SelectDragedTask(Guid id);
         Task ToggleTask(TaskVm model);

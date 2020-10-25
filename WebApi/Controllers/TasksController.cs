@@ -36,16 +36,15 @@ namespace WebApi.Controllers
             return Created($"/api/tasks/{result.Payload.Id}", result);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         [Route("[action]")]
         [ProducesResponseType(typeof(AssignTaskCommandResult), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Assign(Guid id, AssignTaskCommand command)
+        public async Task<IActionResult> Assign(AssignTaskCommand command)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
             try
             {
                 var result = await _taskService.AssignTaskCommandHandler(command);
