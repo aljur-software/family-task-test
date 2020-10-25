@@ -1,5 +1,6 @@
 ﻿using Core.Extensions.ModelConversion;
 using Domain.Commands;
+using Domain.DataModels;
 using Domain.Queries;
 using Domain.ViewModel;
 using Microsoft.AspNetCore.Components;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using WebClient.Abstractions;
+using Task = System.Threading.Tasks.Task;
 
 namespace WebClient.Services
 {
@@ -60,16 +62,8 @@ namespace WebClient.Services
         public async Task CreateTask(TaskVm model)
         {
             var result = await Create(model.ToCreateTaskCommand());
-            if (result != null)
-            {
-                var updatedList = (await GetAllTasks()).Payload;
-                if (updatedList != null)
-                {
-                    Tasks = updatedList;
-                    TasksUpdated?.Invoke(this, null);
-                    return;
-                }
-            }
+            if(result != null)
+                LoadTasks();
 
             CreateTaskFailed?.Invoke(this, "Unable to create record.");
         }
