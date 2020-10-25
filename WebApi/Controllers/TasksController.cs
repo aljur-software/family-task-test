@@ -58,6 +58,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id}")]
+        [Route("api/[controller]/[action]")]
         [ProducesResponseType(typeof(CompleteTaskCommandResult), StatusCodes.Status200OK)]
         public async Task<IActionResult> Complete(Guid id, CompleteTaskCommand command)
         {
@@ -69,7 +70,6 @@ namespace WebApi.Controllers
             try
             {
                 var result = await _taskService.CompleteTaskCommandHandler(command);
-
                 return Ok(result);
             }
             catch (NotFoundException<Guid>)

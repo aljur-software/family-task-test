@@ -32,6 +32,7 @@ namespace WebClient.Services
         public event EventHandler TasksUpdated;
         public event EventHandler TaskSelected;
         public event EventHandler<string> CreateTaskFailed;
+        public event EventHandler<string> CompleteTaskFailed;
 
 
         public void SelectTask(Guid id)
@@ -42,6 +43,10 @@ namespace WebClient.Services
         private async Task<CreateTaskCommandResult> Create(CreateTaskCommand command)
         {
             return await httpClient.PostJsonAsync<CreateTaskCommandResult>("tasks", command);
+        }
+        private async Task<CompleteTaskCommandResult> Complete(CompleteTaskCommand command)
+        {
+            return await httpClient.PutJsonAsync<CompleteTaskCommandResult>("tasks", command);
         }
         private async Task<GetAllTasksQueryResult> GetAllTasks()
         {
@@ -68,16 +73,25 @@ namespace WebClient.Services
             CreateTaskFailed?.Invoke(this, "Unable to create record.");
         }
 
-        public void ToggleTask(Guid id)
+        public async Task ToggleTask(Guid id)
         {
-            foreach (var taskModel in Tasks)
+            var taskVm = Tasks.Where(_ => _.Id == id).FirstOrDefault();
+            if (taskVm == null) 
+                throw new ArgumentNullException("Task was not choosen.");
+            var result = await Complete(taskVm.ToCompleteTaskCommand());
+            if (result != null && result.Succeed)
             {
-                if (taskModel.Id == id)
+                foreach (var taskModel in Tasks)
                 {
-                    taskModel.IsComplete = !taskModel.IsComplete;
+                    if (taskModel.Id == id)
+                    {
+                        taskModel.IsComplete = !taskModel.IsComplete;
+                    }
                 }
             }
-
+            else {
+                throw new Exception("Unable to complete task.");
+            }
             TasksUpdated?.Invoke(this, null);
         }
     }
