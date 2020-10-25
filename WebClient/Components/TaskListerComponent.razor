@@ -47,7 +47,7 @@
 <div class="task-wrapper">
     @foreach (var item in tasks)
     {
-        <div class="task-item p-3 my-3 row m-0">
+        <div class="task-item p-3 my-3 row m-0 draggable" draggable="true" @ondragstart="@(() => HandleDragStart(item))">
             <div class="col-10 p-0">
                 <Check TValue="bool" Checked="@item.IsComplete" CheckedChanged="@(val => ToggleTask(item))">
                     <span class="@(item.IsComplete ? "done-text" : "")">@item.Subject</span>
@@ -104,6 +104,11 @@
 
         tasks = taskService.Tasks.Where(t => t.Member != null && t.Member.Id == selectedMember.Id).ToList();
         StateHasChanged();
+    }
+
+    private void HandleDragStart(TaskVm selectedJob)
+    {
+
     }
 
 }
