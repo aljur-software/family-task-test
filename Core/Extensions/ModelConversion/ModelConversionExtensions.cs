@@ -51,18 +51,21 @@ namespace Core.Extensions.ModelConversion
 
         public static CreateTaskCommand ToCreateTaskCommand(this TaskVm model)
         {
-            var command = new CreateTaskCommand()
+            var command = new CreateTaskCommand
             {
                 Subject = model.Subject,
-                AssignedMemberId = model.AssignedMemberId
+                AssignedMemberId = model.Member != null ? model.Member.Id : new Guid?()
             };
             return command;
         }
 
         public static AssignTaskCommand ToAssignTaskCommand(this TaskVm model)
         {
-            if (model.Member?.Id == null) throw new Exception("No member was found to assign to.");
-            var command = new AssignTaskCommand()
+            if (model.Member?.Id == null) 
+            {
+                throw new ArgumentNullException(nameof(TaskVm.Member.Id), "No member was found to assign to.");
+            }
+            var command = new AssignTaskCommand
             {
                 Id = model.Id,
                 AssignedMemberId = model.Member.Id
@@ -72,7 +75,7 @@ namespace Core.Extensions.ModelConversion
 
         public static CompleteTaskCommand ToCompleteTaskCommand(this TaskVm model)
         {
-            var command = new CompleteTaskCommand()
+            var command = new CompleteTaskCommand
             {
                 Id = model.Id
             };
