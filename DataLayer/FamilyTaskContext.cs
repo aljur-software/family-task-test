@@ -10,7 +10,6 @@ namespace DataLayer
 
         public FamilyTaskContext(DbContextOptions<FamilyTaskContext> options):base(options)
         {
-
         }
 
         public DbSet<Member> Members { get; set; }

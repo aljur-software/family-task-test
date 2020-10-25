@@ -20,10 +20,10 @@ namespace WebClient.Abstractions
         event EventHandler TasksUpdated;
         event EventHandler TaskSelected;
         event EventHandler<string> CreateTaskFailed;
+        event EventHandler<string> CompleteTaskFailed;
 
         Task CreateTask(TaskVm model);
-
         void SelectTask(Guid id);
-        void ToggleTask(Guid id);
+        Task ToggleTask(Guid id);
     }
 }

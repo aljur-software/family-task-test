@@ -40,7 +40,7 @@ namespace Services
 
             _mapper.Map<AssignTaskCommand, Domain.DataModels.Task>(command, task);
 
-            var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task);
+            var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task); 
 
             var succeed = affectedRecordsCount == 1;
 
@@ -56,13 +56,19 @@ namespace Services
 
             _mapper.Map<CompleteTaskCommand, Domain.DataModels.Task>(command, task);
 
-            var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task); //create complete method? 
-
-            var succeed = affectedRecordsCount == 1;
+            if (!task.IsComplete)
+            {
+                var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task);
+                if (affectedRecordsCount < 1)
+                    return new CompleteTaskCommandResult()
+                    {
+                        Succeed = false
+                    };
+            } 
 
             return new CompleteTaskCommandResult()
             {
-                Succeed = succeed
+                Succeed = true
             };
         }
 

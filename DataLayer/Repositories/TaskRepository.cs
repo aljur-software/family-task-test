@@ -32,11 +32,12 @@ namespace DataLayer.Repositories
 
         public async Task<int> AssignTaskAsync(Domain.DataModels.Task record, CancellationToken cancellationToken = default)
         {
-            return await base.UpdateRecordAsync(record, cancellationToken); // what if it was completed by other user?
+            return await base.UpdateRecordAsync(record, cancellationToken); 
         }
         public async Task<int> CompleteTaskAsync(Domain.DataModels.Task record, CancellationToken cancellationToken = default)
         {
-            return await base.UpdateRecordAsync(record, cancellationToken); // what if it was assigned by other user?
+            
+            return await base.UpdateRecordAsync(record, cancellationToken); 
         }
     }
 }
