@@ -54,10 +54,9 @@ namespace Services
         {
             var task = await _taskRepository.ByIdAsync(command.Id);
 
-            _mapper.Map<CompleteTaskCommand, Domain.DataModels.Task>(command, task);
-
-            if (!task.IsComplete)
+            if (task.IsComplete != command.IsComplete)
             {
+                task.IsComplete = command.IsComplete;
                 var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task);
                 if (affectedRecordsCount < 1)
                     return new CompleteTaskCommandResult()

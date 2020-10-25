@@ -73,23 +73,26 @@ namespace WebClient.Services
             CreateTaskFailed?.Invoke(this, "Unable to create record.");
         }
 
-        public async Task ToggleTask(Guid id)
+        public async Task ToggleTask(TaskVm model)
         {
-            var taskVm = Tasks.Where(_ => _.Id == id).FirstOrDefault();
+            var taskVm = Tasks.Where(_ => _.Id == model?.Id).FirstOrDefault();
             if (taskVm == null) 
                 throw new ArgumentNullException("Task was not choosen.");
-            var result = await Complete(taskVm.ToCompleteTaskCommand());
+            var completeCmd = taskVm.ToCompleteTaskCommand();
+            completeCmd.IsComplete = !completeCmd.IsComplete;
+            var result = await Complete(completeCmd);
             if (result != null && result.Succeed)
             {
                 foreach (var taskModel in Tasks)
                 {
-                    if (taskModel.Id == id)
+                    if (taskModel.Id == model?.Id)
                     {
                         taskModel.IsComplete = !taskModel.IsComplete;
                     }
                 }
             }
             else {
+                model.IsComplete = !model.IsComplete;
                 throw new Exception("Unable to complete task.");
             }
             TasksUpdated?.Invoke(this, null);
