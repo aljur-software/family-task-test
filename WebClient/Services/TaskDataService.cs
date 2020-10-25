@@ -84,7 +84,7 @@ namespace WebClient.Services
         public async Task AssignTask(TaskVm model)
         {
             var result = await Assign(model.ToAssignTaskCommand());
-            if (result != null)
+            if (result != null && result.Succeed)
                 LoadTasks();
 
             CreateTaskFailed?.Invoke(this, "Unable to update record.");
