@@ -46,7 +46,7 @@ namespace WebClient.Services
         }
         private async Task<CompleteTaskCommandResult> Complete(CompleteTaskCommand command)
         {
-            return await httpClient.PutJsonAsync<CompleteTaskCommandResult>("tasks", command);
+            return await httpClient.PutJsonAsync<CompleteTaskCommandResult>("tasks/complete", command);
         }
         private async Task<GetAllTasksQueryResult> GetAllTasks()
         {
