@@ -27,6 +27,7 @@ namespace WebClient.Services
 
         public IEnumerable<TaskVm> Tasks { get; private set; }
         public TaskVm SelectedTask { get; private set; }
+        public TaskVm DragedTask { get; private set; }
 
 
         public event EventHandler TasksUpdated;
@@ -39,6 +40,10 @@ namespace WebClient.Services
         {
             SelectedTask = Tasks.SingleOrDefault(t => t.Id == id);
             TasksUpdated?.Invoke(this, null);
+        }
+        public void SelectDragedTask(Guid id)
+        {
+            DragedTask = Tasks.SingleOrDefault(t => t.Id == id);
         }
         private async Task<CreateTaskCommandResult> Create(CreateTaskCommand command)
         {

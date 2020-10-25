@@ -16,6 +16,8 @@ namespace WebClient.Abstractions
     {
         IEnumerable<TaskVm> Tasks { get; }
         TaskVm SelectedTask { get; }
+        TaskVm DragedTask { get; }
+
 
         event EventHandler TasksUpdated;
         event EventHandler TaskSelected;
@@ -24,6 +26,7 @@ namespace WebClient.Abstractions
 
         Task CreateTask(TaskVm model);
         void SelectTask(Guid id);
+        void SelectDragedTask(Guid id);
         Task ToggleTask(Guid id);
     }
 }

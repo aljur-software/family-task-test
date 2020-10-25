@@ -1,47 +1,66 @@
 @using Core.Extensions.ModelConversion
 @using Domain.ClientSideModels
+@using Microsoft.JSInterop
 
 @namespace WebClient.Shared.Components
 
 @inject WebClient.Abstractions.IMemberDataService memberService
+@inject WebClient.Abstractions.ITaskDataService taskService
+@inject IJSRuntime JSRuntime
+
+
 <style>
+    .menu-wrapper .menu-item.no-drop {
+        border: 3px dashed red;
+    }
+
+    .menu-wrapper .menu-item.can-drop {
+        border: 3px dashed green;
+    }
+
     .menu-wrapper {
         background: #FBFBFB;
         box-shadow: 2px 0px 4px 2px rgba(0, 0, 0, 0.12);
         overflow-y: auto;
         height: 100%;
     }
-    .menu-wrapper .menu-item {
-        background: #FFFFFF;
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.12);
-        border-radius: 8px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        border: 3px solid #FFFFFF;
-    }
-    .menu-wrapper .menu-item.active {
-        border: 3px solid #CC1778;
-    }
-    .menu-wrapper .add-menu-item {
-        border: 1px dashed #000000;
-        box-sizing: border-box;
-        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.12));
-        border-radius: 8px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+
+        .menu-wrapper .menu-item {
+            background: #FFFFFF;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.12);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border: 3px solid #FFFFFF;
+        }
+
+            .menu-wrapper .menu-item.active {
+                border: 3px solid #CC1778;
+            }
+
+        .menu-wrapper .add-menu-item {
+            border: 1px dashed #000000;
+            box-sizing: border-box;
+            filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.12));
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
     .add-menu-item .fa {
         font-size: 12px;
     }
+
     .menu-wrapper .label {
         color: #000000;
         font-family: "Poppins Regular";
         font-size: 24px;
         line-height: 36px;
     }
+
     .menu-wrapper .avtar {
         width: 32px;
         height: 32px;
@@ -53,11 +72,13 @@
             font-size: 16px;
             line-height: 24px;
         }
+
         .menu-wrapper .avtar {
             width: 24px;
             height: 24px;
         }
     }
+
     @@media(max-width: 767.98px) {
         .menu-wrapper .avtar {
             width: 16px;
@@ -66,25 +87,30 @@
     }
 </style>
 
+
 <div class="menu-wrapper col-12 p-0">
-    @if(MenuItems != null && MenuItems.Length > 0) {
-        @foreach (var item in MenuItems) {
-            <div class="menu-item col-10 offset-1 p-3 my-4 p-sm-2 @(item.isActive ? "active" : "") dropzone @dropClass"
+    @if (MenuItems != null && MenuItems.Length > 0)
+    {
+        @foreach (var item in MenuItems)
+        {
+            <div id="@item.referenceId"
+                 class="menu-item col-10 offset-1 p-3 my-4 p-sm-2 @(item.isActive ? "active" : "")"
                  ondragover="event.preventDefault();"
                  ondragstart="event.dataTransfer.setData('', event.target.id);"
                  @onclick="@(e => SelectMember(item.referenceId))"
-                 @ondrop="HandleDrop"
-                 @ondragenter="HandleDragEnter"
+                 @ondrop="@(() => HandleDrop(item.referenceId))"
+                 @ondragenter="@(() => HandleDragEnter(item.referenceId))"
                  @ondragleave="HandleDragLeave">
 
-                @if(item.iconColor != null) {
+                @if (item.iconColor != null)
+                {
                     <div class="avtar mr-3" style="background-color: @(item.iconColor);"> </div>
                 }
                 <div class="label"> @item.label </div>
             </div>
         }
     }
-    
+
     <div class="add-menu-item label col-10 offset-1 p-3 my-4 p-sm-2" @onclick="@OnAddItem">
         <span class="fa fa-plus"></span> &nbsp; Add Member
     </div>
@@ -108,7 +134,7 @@
     private void MemberServiceOnSelectedMemberChanged(object sender, EventArgs e)
     {
         InactivateAllItems();
-        if(memberService.SelectedMember != null)
+        if (memberService.SelectedMember != null)
             SetActiveItem(memberService.SelectedMember.Id);
         StateHasChanged();
     }
@@ -119,7 +145,7 @@
         StateHasChanged();
     }
 
-    [Parameter] public MenuItem[] MenuItems {get; set;}
+    [Parameter] public MenuItem[] MenuItems { get; set; }
 
     private void InactivateAllItems()
     {
@@ -150,24 +176,32 @@
         memberService.SelectNullMember();
     }
 
-    string dropClass = "";
 
-    private void HandleDragEnter()
+    private async Task HandleDragEnter(Guid memberId)
     {
-       // ToDo: Check canDrop task
-        dropClass = "can-drop";
+        var task = taskService.DragedTask;
+
+        if (task.IsComplete == true) return;
+        if (task.Member != null && task.Member.Id == memberId) return;
+
+        await JSRuntime.InvokeVoidAsync("AddClass", memberId.ToString(), "can-drop");
+
     }
 
-    private void HandleDragLeave()
+    private async Task HandleDragLeave()
     {
-        dropClass = "";
+        await JSRuntime.InvokeVoidAsync("RefreshMenuItemsDragStatus", null);
+
     }
 
-    private async Task HandleDrop()
+    private async Task HandleDrop(Guid memberId)
     {
-        dropClass = "";
+        await JSRuntime.InvokeVoidAsync("RefreshMenuItemsDragStatus", null);
+
+        var task = taskService.DragedTask;
 
         // ToDo: TaskService.AssignTask(taskId, memberId);
+
     }
 
 }
