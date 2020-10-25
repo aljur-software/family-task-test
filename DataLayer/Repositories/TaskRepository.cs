@@ -15,7 +15,7 @@ namespace DataLayer.Repositories
 
         public async Task<IEnumerable<Domain.DataModels.Task>> GetAllTasksWithMemberAsync(CancellationToken cancellationToken = default)
         {
-            var result = Query.Include(t => t.AssignedMember).ToList();
+            var result =await  Query.Include(t => t.AssignedMember).ToListAsync();
             return result;
         }
 
