@@ -77,8 +77,7 @@ namespace Core.Extensions.ModelConversion
         {
             var command = new CompleteTaskCommand
             {
-                Id = model.Id,
-                IsComplete = model.IsComplete
+                Id = model.Id
             };
             return command;
         }
