@@ -33,7 +33,7 @@ namespace Services
 
             var taskVm = _mapper.Map<TaskVm>(persistedTask);
 
-            return new CreateTaskCommandResult()
+            return new CreateTaskCommandResult
             {
                 Payload = taskVm
             };
@@ -47,13 +47,13 @@ namespace Services
             }
             var task = await _taskRepository.ByIdAsync(command.Id);
 
-            _mapper.Map<AssignTaskCommand, Domain.DataModels.Task>(command, task);
+            _mapper.Map(command, task);
 
-            var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task); 
+            var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task);
 
             var succeed = affectedRecordsCount == 1;
 
-            return new AssignTaskCommandResult()
+            return new AssignTaskCommandResult
             {
                 Succeed = succeed
             };
@@ -78,7 +78,7 @@ namespace Services
             task.IsComplete = true;
             var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task);
             var succeed = affectedRecordsCount == 1;
-            return new CompleteTaskCommandResult()
+            return new CompleteTaskCommandResult
             {
                 Succeed = succeed
             };
@@ -86,14 +86,11 @@ namespace Services
 
         public async Task<GetAllTasksQueryResult> GetAllTasksQueryHandler()
         {
-            var taskVmList = new List<TaskVm>();
-
             var tasks = await _taskRepository.Reset().GetAllTasksWithMemberAsync();
 
-            if (tasks.Any())
-            {
-                taskVmList = _mapper.Map<List<TaskVm>>(tasks);
-            }                    
+            var taskVmList = tasks.Any()
+                ? _mapper.Map<List<TaskVm>>(tasks)
+                : new List<TaskVm>();
 
             return new GetAllTasksQueryResult()
             {

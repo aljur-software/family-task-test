@@ -1,5 +1,4 @@
-﻿
-namespace Domain.Commands
+﻿namespace Domain.Commands
 {
     public class AssignTaskCommandResult
     {

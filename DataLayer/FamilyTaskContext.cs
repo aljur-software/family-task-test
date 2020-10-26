@@ -1,7 +1,5 @@
-﻿using Core.Abstractions;
-using Domain.DataModels;
+﻿using Domain.DataModels;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace DataLayer
 {
@@ -10,6 +8,7 @@ namespace DataLayer
 
         public FamilyTaskContext(DbContextOptions<FamilyTaskContext> options):base(options)
         {
+
         }
 
         public DbSet<Member> Members { get; set; }

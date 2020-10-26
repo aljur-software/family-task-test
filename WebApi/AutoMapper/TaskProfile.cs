@@ -14,7 +14,7 @@ namespace WebApi.AutoMapper
             CreateMap<AssignTaskCommand, Task>();
             CreateMap<Task, TaskVm>().ForMember(
                 destination => destination.Member,
-                options => options.MapFrom(src => src.AssignedMember)
+                options => options.MapFrom(source => source.AssignedMember)
             );
         }
     }

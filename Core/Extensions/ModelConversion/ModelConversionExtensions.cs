@@ -69,9 +69,9 @@ namespace Core.Extensions.ModelConversion
             {
                 throw new ArgumentNullException(nameof(model));
             }
-            if (model.Member?.Id == null) 
+            if (model.Member?.Id == null)
             {
-                throw new ArgumentNullException(nameof(TaskVm.Member.Id), "No member was found to assign to.");
+                throw new ArgumentException("No member was found to assign to.", nameof(TaskVm.Member.Id));
             }
             var command = new AssignTaskCommand
             {
