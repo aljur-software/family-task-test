@@ -181,7 +181,7 @@
     {
         var taskVm = taskService.DragedTask;
 
-        if (taskVm.IsComplete == true | taskVm.Member?.Id == memberId)
+        if (taskVm.Member?.Id == memberId)
         {
             await JSRuntime.InvokeVoidAsync("AddClass", memberId.ToString(), "no-drop");
         }
@@ -202,7 +202,7 @@
         await JSRuntime.InvokeVoidAsync("RefreshMenuItemsDragStatus", null);
 
         var taskVm = taskService.DragedTask;
-        if (taskVm.IsComplete == true | taskVm.Member?.Id == memberId) return;
+        if (taskVm.Member?.Id == memberId) return;
         if (taskVm.Member == null)
             taskVm.Member = new Domain.ViewModel.MemberVm();
         taskVm.Member.Id = memberId;
