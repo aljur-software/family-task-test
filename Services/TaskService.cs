@@ -67,20 +67,20 @@ namespace Services
             }
             var task = await _taskRepository.ByIdAsync(command.Id);
 
-            if (!task.IsComplete)
+            if (task.IsComplete)
             {
-                task.IsComplete = true;
-                var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task);
-                if (affectedRecordsCount < 1)
-                    return new CompleteTaskCommandResult()
-                    {
-                        Succeed = false
-                    };
-            } 
+                return new CompleteTaskCommandResult()
+                {
+                    Succeed = true
+                };
+            }
 
+            task.IsComplete = true;
+            var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task);
+            var succeed = affectedRecordsCount == 1;
             return new CompleteTaskCommandResult()
             {
-                Succeed = true
+                Succeed = succeed
             };
         }
 
@@ -91,7 +91,9 @@ namespace Services
             var tasks = await _taskRepository.Reset().GetAllTasksWithMemberAsync();
 
             if (tasks.Any())
+            {
                 taskVmList = _mapper.Map<List<TaskVm>>(tasks);
+            }                    
 
             return new GetAllTasksQueryResult()
             {

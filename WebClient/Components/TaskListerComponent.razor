@@ -60,7 +60,7 @@
     {
         <div class="task-item p-3 my-3 row m-0 draggable" draggable="true" @ondragstart="@(() => HandleDragStart(item.Id))">
             <div class="col-10 p-0">
-                <Check Name="@item.Id.ToString()" TValue="bool" Checked="@item.IsComplete" CheckedChanged="@(val => ToggleTask(item))">
+                <Check Name="@item.Id.ToString()" TValue="bool" Checked="@item.IsComplete" CheckedChanged="@(val => CompleteTask(item))">
                     <span class="@(item.IsComplete ? "done-text" : "")">@item.Subject</span>
                 </Check>
             </div>
@@ -89,7 +89,7 @@
         return base.OnInitializedAsync();
     }
 
-    private async Task ToggleTask(TaskVm model)
+    private async Task CompleteTask(TaskVm model)
     {
         if (model == null) return;
         if (!model.IsComplete)
