@@ -56,6 +56,7 @@
                     <span class="@(item.IsComplete ? "done-text" : "")">@item.Subject</span>
                 </Check>
             </div>
+            <p>test text</p>
             <div class="col-2 p-0 d-flex justify-content-end align-items-center">
                 @if (item.Member != null) {
                     <div class="avtar mr-1" style="background-color: @item.Member.Avatar;"></div>
@@ -83,7 +84,7 @@
     private void ToggleTask(TaskVm model)
     {
         if (model == null) return;
-        if (model.IsComplete)
+        if (!model.IsComplete)
         {
             taskService.ToggleTask(model.Id);
             StateHasChanged();
