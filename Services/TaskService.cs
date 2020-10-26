@@ -54,9 +54,9 @@ namespace Services
         {
             var task = await _taskRepository.ByIdAsync(command.Id);
 
-            if (task.IsComplete != command.IsComplete)
+            if (!task.IsComplete)
             {
-                task.IsComplete = command.IsComplete;
+                task.IsComplete = true;
                 var affectedRecordsCount = await _taskRepository.UpdateRecordAsync(task);
                 if (affectedRecordsCount < 1)
                     return new CompleteTaskCommandResult()

@@ -91,27 +91,24 @@ namespace WebClient.Services
         }
 
 
-        public async Task ToggleTask(TaskVm model)
+        public async Task ToggleTask(Guid id)
         {
-            var taskVm = Tasks.Where(_ => _.Id == model?.Id).FirstOrDefault();
+            var taskVm = Tasks.Where(_ => _.Id == id).FirstOrDefault();
             if (taskVm == null) 
                 throw new ArgumentNullException("Task was not choosen.");
-            var completeCmd = taskVm.ToCompleteTaskCommand();
-            completeCmd.IsComplete = !completeCmd.IsComplete;
-            var result = await Complete(completeCmd);
+            var result = await Complete(taskVm.ToCompleteTaskCommand());
             if (result != null && result.Succeed)
             {
                 foreach (var taskModel in Tasks)
                 {
-                    if (taskModel.Id == model?.Id)
+                    if (taskModel.Id == id)
                     {
-                        taskModel.IsComplete = !taskModel.IsComplete;
+                        taskModel.IsComplete = true;
                     }
                 }
             }
             else {
-                model.IsComplete = !model.IsComplete;
-                throw new Exception("Unable to complete task.");
+                CompleteTaskFailed.Invoke(this, "Unable to complete task.");
             }
             TasksUpdated?.Invoke(this, null);
         }

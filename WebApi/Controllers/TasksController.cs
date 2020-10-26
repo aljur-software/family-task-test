@@ -57,7 +57,7 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         [Route("[action]")]
         [ProducesResponseType(typeof(CompleteTaskCommandResult), StatusCodes.Status200OK)]
         public async Task<IActionResult> Complete(Guid id, CompleteTaskCommand command)

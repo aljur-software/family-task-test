@@ -7,6 +7,5 @@ namespace Domain.Commands
     public class CompleteTaskCommand
     {
         public Guid Id { get; set; }
-        public bool IsComplete { get; set; }
     }
 }
