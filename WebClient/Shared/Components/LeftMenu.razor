@@ -179,13 +179,16 @@
 
     private async Task HandleDragEnter(Guid memberId)
     {
-        var task = taskService.DragedTask;
+        var taskVm = taskService.DragedTask;
 
-        if (task.IsComplete == true) return;
-        if (task.Member != null && task.Member.Id == memberId) return;
-
-        await JSRuntime.InvokeVoidAsync("AddClass", memberId.ToString(), "can-drop");
-
+        if (taskVm.IsComplete == true | taskVm.Member?.Id == memberId)
+        {
+            await JSRuntime.InvokeVoidAsync("AddClass", memberId.ToString(), "no-drop");
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("AddClass", memberId.ToString(), "can-drop");
+        }
     }
 
     private async Task HandleDragLeave()
@@ -198,13 +201,13 @@
     {
         await JSRuntime.InvokeVoidAsync("RefreshMenuItemsDragStatus", null);
 
-        var task = taskService.DragedTask;
-        if (task.Member?.Id == memberId) return;
-        if (task.Member == null)
-            task.Member = new Domain.ViewModel.MemberVm();
-        task.Member.Id = memberId;
+        var taskVm = taskService.DragedTask;
+        if (taskVm.IsComplete == true | taskVm.Member?.Id == memberId) return;
+        if (taskVm.Member == null)
+            taskVm.Member = new Domain.ViewModel.MemberVm();
+        taskVm.Member.Id = memberId;
 
-        await taskService.AssignTask(task);
+        await taskService.AssignTask(taskVm);
 
     }
 
