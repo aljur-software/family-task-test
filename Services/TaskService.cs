@@ -4,6 +4,7 @@ using Core.Abstractions.Services;
 using Domain.Commands;
 using Domain.Queries;
 using Domain.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,19 +24,27 @@ namespace Services
 
         public async Task<CreateTaskCommandResult> CreateTaskCommandHandler(CreateTaskCommand command)
         {
+            if (command == null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
             var task = _mapper.Map<Domain.DataModels.Task>(command);
             var persistedTask = await _taskRepository.CreateRecordAsync(task);
 
-            var vm = _mapper.Map<TaskVm>(persistedTask);
+            var taskVm = _mapper.Map<TaskVm>(persistedTask);
 
             return new CreateTaskCommandResult()
             {
-                Payload = vm
+                Payload = taskVm
             };
         }
 
         public async Task<AssignTaskCommandResult> AssignTaskCommandHandler(AssignTaskCommand command)
         {
+            if (command == null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
             var task = await _taskRepository.ByIdAsync(command.Id);
 
             _mapper.Map<AssignTaskCommand, Domain.DataModels.Task>(command, task);
@@ -52,6 +61,10 @@ namespace Services
 
         public async Task<CompleteTaskCommandResult> CompleteTaskCommandHandler(CompleteTaskCommand command)
         {
+            if (command == null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
             var task = await _taskRepository.ByIdAsync(command.Id);
 
             if (!task.IsComplete)
@@ -73,16 +86,16 @@ namespace Services
 
         public async Task<GetAllTasksQueryResult> GetAllTasksQueryHandler()
         {
-            IEnumerable<TaskVm> vm = new List<TaskVm>();
+            IEnumerable<TaskVm> taskVmList = new List<TaskVm>();
 
             var tasks = await _taskRepository.Reset().GetAllTasksWithMemberAsync();
 
-            if (tasks != null && tasks.Any())
-                vm = _mapper.Map<IEnumerable<TaskVm>>(tasks);
+            if (tasks.Any())
+                taskVmList = _mapper.Map<IEnumerable<TaskVm>>(tasks);
 
             return new GetAllTasksQueryResult()
             {
-                Payload = vm
+                Payload = taskVmList
             };
         }
     }

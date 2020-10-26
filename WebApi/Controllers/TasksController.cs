@@ -5,8 +5,6 @@ using Domain.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace WebApi.Controllers
@@ -60,13 +58,12 @@ namespace WebApi.Controllers
         [HttpPut]
         [Route("[action]")]
         [ProducesResponseType(typeof(CompleteTaskCommandResult), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Complete(Guid id, CompleteTaskCommand command)
+        public async Task<IActionResult> Complete(CompleteTaskCommand command)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
             try
             {
                 var result = await _taskService.CompleteTaskCommandHandler(command);

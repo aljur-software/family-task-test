@@ -51,6 +51,10 @@ namespace Core.Extensions.ModelConversion
 
         public static CreateTaskCommand ToCreateTaskCommand(this TaskVm model)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
             var command = new CreateTaskCommand
             {
                 Subject = model.Subject,
@@ -61,6 +65,10 @@ namespace Core.Extensions.ModelConversion
 
         public static AssignTaskCommand ToAssignTaskCommand(this TaskVm model)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
             if (model.Member?.Id == null) 
             {
                 throw new ArgumentNullException(nameof(TaskVm.Member.Id), "No member was found to assign to.");
@@ -75,6 +83,10 @@ namespace Core.Extensions.ModelConversion
 
         public static CompleteTaskCommand ToCompleteTaskCommand(this TaskVm model)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
             var command = new CompleteTaskCommand
             {
                 Id = model.Id
