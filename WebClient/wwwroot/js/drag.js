@@ -13,6 +13,9 @@ function RefreshMenuItemsDragStatus() {
 
     let menuItems = document.querySelectorAll(".menu-item");
 
-    menuItems.forEach(u => { u.classList.remove("can-drop") });
+    menuItems.forEach(u => {
+        u.classList.remove("can-drop");
+        u.classList.remove("no-drop");
+    });
 
 }
