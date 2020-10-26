@@ -114,11 +114,11 @@ namespace WebClient.Services
                         taskModel.IsComplete = true;
                     }
                 }
+                TasksUpdated?.Invoke(this, null);
             }
             else {
                 CompleteTaskFailed.Invoke(this, "Unable to complete task.");
-            }
-            TasksUpdated?.Invoke(this, null);
+            }            
         }
     }
 }
