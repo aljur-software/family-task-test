@@ -48,5 +48,50 @@ namespace Core.Extensions.ModelConversion
             };
             return command;
         }
+
+        public static CreateTaskCommand ToCreateTaskCommand(this TaskVm model)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+            var command = new CreateTaskCommand
+            {
+                Subject = model.Subject,
+                AssignedMemberId = model.Member?.Id
+            };
+            return command;
+        }
+
+        public static AssignTaskCommand ToAssignTaskCommand(this TaskVm model)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+            if (model.Member?.Id == null)
+            {
+                throw new ArgumentException("No member was found to assign to.", nameof(TaskVm.Member.Id));
+            }
+            var command = new AssignTaskCommand
+            {
+                Id = model.Id,
+                AssignedMemberId = model.Member.Id
+            };
+            return command;
+        }
+
+        public static CompleteTaskCommand ToCompleteTaskCommand(this TaskVm model)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+            var command = new CompleteTaskCommand
+            {
+                Id = model.Id
+            };
+            return command;
+        }
     }
 }

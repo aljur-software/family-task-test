@@ -1,7 +1,5 @@
-﻿using Core.Abstractions;
-using Domain.DataModels;
+﻿using Domain.DataModels;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace DataLayer
 {
