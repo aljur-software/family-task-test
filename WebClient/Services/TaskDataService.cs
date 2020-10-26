@@ -77,17 +77,25 @@ namespace WebClient.Services
         {
             var result = await Create(model.ToCreateTaskCommand());
             if(result != null)
+            {
                 LoadTasks();
-
-            CreateTaskFailed?.Invoke(this, "Unable to create record.");
+            }
+            else
+            {
+                CreateTaskFailed?.Invoke(this, "Unable to create record.");
+            }
         }
         public async Task AssignTask(TaskVm model)
         {
             var result = await Assign(model.ToAssignTaskCommand());
             if (result != null && result.Succeed)
+            {
                 LoadTasks();
-
-            CreateTaskFailed?.Invoke(this, "Unable to update record.");
+            }
+            else
+            {
+                CreateTaskFailed?.Invoke(this, "Unable to update record.");
+            }
         }
 
 
