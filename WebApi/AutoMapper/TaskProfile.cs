@@ -13,8 +13,8 @@ namespace WebApi.AutoMapper
             CreateMap<CompleteTaskCommand, Task>();
             CreateMap<AssignTaskCommand, Task>();
             CreateMap<Task, TaskVm>().ForMember(
-                dest => dest.Member,
-                opt => opt.MapFrom(src => src.AssignedMember)
+                destination => destination.Member,
+                options => options.MapFrom(src => src.AssignedMember)
             );
         }
     }

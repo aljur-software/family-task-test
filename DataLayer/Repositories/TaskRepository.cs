@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 
@@ -15,10 +14,9 @@ namespace DataLayer.Repositories
 
         public async Task<IEnumerable<Domain.DataModels.Task>> GetAllTasksWithMemberAsync(CancellationToken cancellationToken = default)
         {
-            var result =await  Query.Include(t => t.AssignedMember).ToListAsync();
+            var result = await Query.Include(t => t.AssignedMember).ToListAsync();
             return result;
         }
-
 
         ITaskRepository IBaseRepository<Guid, Domain.DataModels.Task, ITaskRepository>.NoTrack()
         {
@@ -28,16 +26,6 @@ namespace DataLayer.Repositories
         ITaskRepository IBaseRepository<Guid, Domain.DataModels.Task, ITaskRepository>.Reset()
         {
             return base.Reset();
-        }
-
-        public async Task<int> AssignTaskAsync(Domain.DataModels.Task record, CancellationToken cancellationToken = default)
-        {
-            return await base.UpdateRecordAsync(record, cancellationToken); 
-        }
-        public async Task<int> CompleteTaskAsync(Domain.DataModels.Task record, CancellationToken cancellationToken = default)
-        {
-            
-            return await base.UpdateRecordAsync(record, cancellationToken); 
         }
     }
 }
