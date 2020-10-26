@@ -7,6 +7,8 @@
 @inject WebClient.Abstractions.IMemberDataService memberService
 @inject WebClient.Abstractions.ITaskDataService taskService
 @inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
 
 
 <style>
@@ -89,6 +91,11 @@
 
 
 <div class="menu-wrapper col-12 p-0">
+
+    <div class="menu-item col-10 offset-1 p-3 my-4 p-sm-2" @onclick="@AllTasks">
+        <div class="label">All Tasks </div>
+    </div>
+
     @if (MenuItems != null && MenuItems.Length > 0)
     {
         @foreach (var item in MenuItems)
@@ -173,7 +180,15 @@
 
     private void OnAddItem()
     {
+
         memberService.SelectNullMember();
+    }
+
+    private void AllTasks()
+    {
+        memberService.SelectNullMember();
+        NavigationManager.NavigateTo("manage-tasks");
+
     }
 
 
