@@ -86,12 +86,12 @@ namespace Services
 
         public async Task<GetAllTasksQueryResult> GetAllTasksQueryHandler()
         {
-            IEnumerable<TaskVm> taskVmList = new List<TaskVm>();
+            var taskVmList = new List<TaskVm>();
 
             var tasks = await _taskRepository.Reset().GetAllTasksWithMemberAsync();
 
             if (tasks.Any())
-                taskVmList = _mapper.Map<IEnumerable<TaskVm>>(tasks);
+                taskVmList = _mapper.Map<List<TaskVm>>(tasks);
 
             return new GetAllTasksQueryResult()
             {
